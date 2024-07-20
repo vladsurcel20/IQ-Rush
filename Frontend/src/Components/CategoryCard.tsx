@@ -1,5 +1,5 @@
 import { useNavigate } from "react-router-dom"
-import { useState } from "react";
+import { useState , useEffect} from "react";
 import api from "../api/quizzes.ts"
 import { AxiosError, AxiosResponse } from "axios";
 
@@ -23,6 +23,18 @@ const CategoryCard = (props: Props) => {
 
     const category:string = props.category.toLowerCase().trim();
 
+    useEffect(() => {
+      if(quizzes.length > 0) {
+        sessionStorage.setItem('quizzes', JSON.stringify(quizzes))
+      }
+    }, [quizzes])
+
+    useEffect(() => {
+      sessionStorage.clear();
+    },[])
+
+
+
     const handleClick = async () => {
       setSelectedCategory(category);
 
@@ -30,10 +42,13 @@ const CategoryCard = (props: Props) => {
         try {
         const res:AxiosResponse = await api.get(`/category/${category}`)
         setQuizzes(res.data);
+        setTimeout(() => {
+          navigate("/quizzes/play")
+        }, 300);
         } catch(err) {
           const error = err as AxiosError;
           if(error.response?.data){
-            console.log((error.response.data as { message: string }).message);
+            alert(error.response.data);
           } else {
             console.log(`Error: ${error.message}`);
             
@@ -42,7 +57,6 @@ const CategoryCard = (props: Props) => {
       }
       await fetchApi()
       setSelectedCategory(null);
-      navigate("/quizzes/play")
     }
 
   return (
