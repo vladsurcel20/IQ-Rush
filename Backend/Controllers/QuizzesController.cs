@@ -34,7 +34,12 @@ namespace QuizApp.Controllers
         [HttpGet("category/{category}")]
         public IActionResult GetByCategory(string category)
         {
-            return Ok(_quizzesService.GetByCategory(category));
+            if (_quizzesService.IsCategoryValid(category))
+            {
+                _quizzesService.GetByCategory(category);
+                return Ok();
+            } 
+            return BadRequest("No quizzes in this category");
         }
 
         [HttpGet("type/{type}")]

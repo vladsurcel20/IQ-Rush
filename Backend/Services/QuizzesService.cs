@@ -26,6 +26,12 @@ namespace QuizApp.Services
             else return false;
         }
 
+        public bool IsCategoryValid(string category)
+        {
+            if(_quizzesContext.Quizzes.Count(q => q.Category == category) >= 3) return true;
+            else return false;
+        }
+
         public List<Quizzes> GetAll()
         {
             return _quizzesContext.Quizzes.ToList();
