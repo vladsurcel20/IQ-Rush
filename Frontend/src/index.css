@@ -1,0 +1,236 @@
+*, ::after, ::before{
+  margin:0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+:root {
+  font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
+  line-height: 1.5;
+  font-weight: 400;
+  user-select: none;
+
+  color-scheme: light dark;
+  color: rgba(255, 255, 255, 0.87);
+  background-color: #242424;
+
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+
+  --yellow: #FFE32F;
+  --white: rgba(255, 255, 255, 0.87);
+  --blue: #446EFB;
+} 
+
+
+@font-face {
+  font-family: myFont;
+  src: url('/cuphead.ttf') , format('truetype');
+}
+
+/* HEADER */
+
+.header{ 
+  width: 100%;
+  height: 10vh;
+  font-family: myFont;
+  font-size: large;
+  font-weight: 500;
+  background-color: #446EFB;
+}
+
+.navbar{
+  height: 100%;
+  max-height: 100%;
+  width:100%;
+}
+
+.navbar.notLogged{
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+}
+
+.navbar.notLogged > ul, .navbar.Logged > ul{
+  display: flex; 
+  list-style: none;
+  cursor: pointer;
+}
+
+.navbar.notLogged > ul >li, .navbar.Logged > ul >li{
+  margin: 0 10px;
+}
+
+.header img{
+  width: 75px;
+  cursor: pointer;
+}
+
+.navbar.Logged {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0 2%;
+}
+
+
+/*  LANDING PAGE  */
+
+
+.mainPage {
+  max-width: 100%;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  font-family: myFont;
+}
+
+.mainPage a.playBtn{
+  width: 20%;
+  height: 50px;
+  position: relative;
+  top: 50Vh;
+}
+
+.mainPage button.playBtn{
+  border: none;
+  width: 100%;
+  height: 50px;
+  color: var(--white);
+  background-color: var(--yellow);
+  font-family: myFont;
+  font-size: x-large;
+  font-weight: 600;
+  cursor: pointer;
+  border-radius: 20px;
+}
+
+.mainPage .playBtn:hover{
+  font-size: xx-large;
+  transform: scale(1.05);
+}
+
+
+
+/*    QUIZ PAGE   */
+
+
+.quizPage{
+  max-width: 100%;
+  width: 100%;
+  height: 100%;
+  display: flex; 
+  flex-direction: column;
+  align-items: center;
+  font-family: myFont;
+}
+
+.quizPage p.intro{
+  margin: 5% 0 8% 0;
+  font-size: xx-large;
+}
+
+.quizPage .categoriesDiv{ 
+  width: 80%; 
+  display: flex;
+  flex-direction: row;
+}
+
+.categoryCard { 
+  width: 150px; 
+  height: 60px;
+  background-color: var(--blue);
+  display: flex; 
+  align-items: center;
+  justify-content: center;
+  margin: 20px 20px;
+  cursor:pointer;
+  transition: transform 0.25s;
+}
+
+.categoryCard:hover{ 
+  transform: translateY(-10px)
+}
+
+
+
+/*   PLAY PAGE   */
+
+
+.playPage {
+  max-width: 100%;
+  width: 100%;
+  height: 100%;
+  font-family: myFont;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.playPage span{
+  width: 100%;
+  margin: 5% 0 5% 0;
+  position: relative;
+  font-size: x-large;
+  display: flex; 
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+}
+
+.playPage img{
+  position: absolute;
+  top: 0%;
+  left: 10%;
+  cursor: pointer;
+}
+
+.playPage button{
+  cursor: pointer;
+}
+
+.playPage .numberBtnsDiv{
+  width:50%;
+  display:flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-evenly;
+  margin-bottom: 8%;
+}
+
+.numberBtnsDiv button{
+  width: 43px;
+  height: 43px;
+  border:none;
+  border-radius: 50%;
+  font-family: myFont;
+  font-size: large;
+  font-weight: 700;
+  color: var(--white);
+  background-color: var(--yellow);
+}
+
+.numberBtnsDiv button:focus{
+  transform: scale(1.1);
+  box-shadow: 0 0  10px 1px var(--yellow);
+  
+}
+
+.playPage .startBtn{
+  width: 130px;
+  height: 60px;
+  border:none;
+  border-radius: 10px;
+  font-family: myFont;
+  font-weight: 600;
+  font-size: x-large;
+  color: var(--white);
+  background-color: var(--yellow);
+}
+
