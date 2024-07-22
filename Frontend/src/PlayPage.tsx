@@ -1,18 +1,27 @@
 import React, { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
+import StartMenu from './Components/StartMenu';
+import PlayMenu from './Components/PlayMenu';
+
+export interface Quiz {
+    id: number;
+    question: string; 
+    category: string;
+    type: string;
+    }
+
 
 const PlayPage = () => {
     const navigate = useNavigate();
 
     const [quizzesNr, setQuizzesNr] = useState<number | null>(null)
+    const [gameQuizzes, setGameQuizzes] = useState<Quiz[]>([])
+    const [startBtnClick, setStartBtnClick] = useState<boolean>(false);
 
-    const handleNrBtnClick = (e:React.MouseEvent<HTMLButtonElement>) => {
-        setQuizzesNr(parseInt(e.currentTarget.textContent || '0', 10))
-    }
 
   return (
     <div className='playPage'>
-
+{/* 
         <span>
             <img src='/left-arrow64.png' onClick={() => navigate('/quizzes')}></img>
             <p className="intro">Select the number of questions</p>
@@ -26,7 +35,11 @@ const PlayPage = () => {
         </div>
 
         <button className='startBtn'>Start</button>
-        <p>Nr. of quizzes:{quizzesNr}</p>
+        <p>Nr. of quizzes:{quizzesNr}</p> */}
+        {!startBtnClick ? 
+            (<StartMenu setStartBtnClick={setStartBtnClick} setGameQuizzes={setGameQuizzes}/>) 
+            : (<PlayMenu setStartBtnClick={setStartBtnClick} gameQuizzes={gameQuizzes}/>)
+        }
     </div>
   )
 }
