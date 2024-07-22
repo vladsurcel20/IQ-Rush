@@ -234,3 +234,54 @@
   background-color: var(--yellow);
 }
 
+
+
+.playPage .questionDiv {
+  width: 30%;
+  min-width: fit-content;
+  margin: 75px 0;
+  height: 4em;
+  background-color: var(--yellow);
+  color: var(--white);
+  display: flex; 
+  align-items: center;
+  justify-content: center;
+  font-size: 1.3em;
+  font-weight: 600;
+}
+
+.playPage .answersDiv{
+  width: 80%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.answersDiv span{
+  width: 100%;
+  display:grid;
+  grid-template-rows: 70px 70px;
+  grid-template-columns: 20% 20%;
+  column-gap: 10%;
+  row-gap: 40px;
+}
+
+.answersDiv span .answer { 
+  width: 100%;
+  height: 100%;
+  display:flex;
+  justify-content: center;
+  align-items: center;
+  background-color: var(--blue);
+  cursor: pointer;
+  font-size: 0.7em;
+  font-family: Myfont;
+  color: var(--white);
+  background-color: var(--blue);
+  border: none
+}
+
+.answersDiv span .answer:focus{ 
+  transform: scale(1.1);
+  box-shadow: 0 0 20px 1px var(--blue);
+}
