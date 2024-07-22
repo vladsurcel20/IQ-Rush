@@ -26,15 +26,22 @@ const PlayMenu = ({setStartBtnClick, gameQuizzes}: Props) => {
     let [answerInput, setAnswerInput] = useState<string>('')
     const[isGameFinished, setIsGameFinished] = useState<boolean>(true)
     let [timer, setTimer] = useState<number>(5)
+    const [selectedAnswer, setSelectedAnswer] = useState<Answer | undefined>(undefined)
+    const [gamePoints, setGamePoints] = useState<number>(0)
 
     const quizzesNr:number = 3;
     const timeToAnswer:number = 5000;
 
     const timerInterval = setInterval(() => {
-        if(timer > 0) setTimer(timer-1)
-        else clearInterval(timerInterval)
+        if(timer-1 > 0) setTimer(timer-1)
+        else setTimer(5)
     }, 1000)
 
+
+    const pointsLogic = () => {
+        if(selectedAnswer?.isCorrect == true) setGamePoints(gamePoints+1)
+        setSelectedAnswer(undefined)
+    }
     
     useEffect(() => {
         
@@ -57,16 +64,22 @@ const PlayMenu = ({setStartBtnClick, gameQuizzes}: Props) => {
         if (gameQuizzes[currentIndex]) {
             setCurrentAnswers(answers.filter((a) => gameQuizzes[currentIndex].id == a.quizId));
         }
+        pointsLogic();
+        // setTimer(5)
+        // timerInterval
       }, [currentIndex, answers]);
 
 
       useEffect(() => {
+        timerInterval
         let x:number=0;
         const interval = setInterval(() => {
             x++;
             setCurrentIndex((prevIndex) => 
                 prevIndex + 1 === gameQuizzes.length ? 0 : prevIndex + 1
             );
+            // setTimer(5);
+            // setTimer(5)
             if(x >=3) {
                 clearInterval(interval)
                 setIsGameFinished(true);
@@ -77,16 +90,26 @@ const PlayMenu = ({setStartBtnClick, gameQuizzes}: Props) => {
 
 
 
-  useEffect(() => {
-    setTimer(5); 
-    timerInterval;
-    // return () => clearInterval(timerInterval);
-  }, [currentIndex]);
+//   useEffect(() => {
+//     timerInterval
+//   }, []);
 
 
 
     const handleInputChange = (e:React.ChangeEvent<HTMLInputElement>) => {
         setAnswerInput(e.target.value)
+    }
+
+    const handleAnswerClick = (e:React.MouseEvent<HTMLElement>) => {
+        const key = e.currentTarget.getAttribute('data-id')
+        if(!key) return;
+        const answerId = parseInt(key)
+
+        const answer = currentAnswers.find((a) => {
+            return a.id == answerId
+            
+        })        
+        setSelectedAnswer(answer)
     }
 
     
@@ -100,11 +123,11 @@ const PlayMenu = ({setStartBtnClick, gameQuizzes}: Props) => {
 
         <div className='answersDiv'>
             {gameQuizzes[currentIndex].type !== 'input' ? (
-                currentAnswers.map((a) => (
-                    <div className='answerDiv' key={a.id}>
-                        <p>{a.answer}</p>
-                    </div>
-                )) 
+                <span>
+                    {currentAnswers.map((a) => (
+                        <button type='button' className='answer' data-id={a.id} onClick={handleAnswerClick}>{a.answer}</button>
+                    ))} 
+                </span>
             ) : (
                 <input value={answerInput} onChange={handleInputChange}></input>
             )
