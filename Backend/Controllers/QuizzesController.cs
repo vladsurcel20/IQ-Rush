@@ -27,18 +27,16 @@ namespace QuizApp.Controllers
             {
                 return BadRequest("Invalid Id");
             }
-            _quizzesService.GetById(id);
-            return Ok();
+            return Ok(_quizzesService.GetById(id));
         }
 
         [HttpGet("category/{category}")]
-        public IActionResult GetByCategory(string category)
+        public IActionResult Get(string category)
         {
             if (_quizzesService.IsCategoryValid(category))
             {
-                _quizzesService.GetByCategory(category);
-                return Ok();
-            } 
+                return Ok(_quizzesService.GetByCategory(category));
+            }
             return BadRequest("No quizzes in this category");
         }
 

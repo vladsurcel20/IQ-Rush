@@ -44,7 +44,7 @@ namespace QuizApp.Services
 
         public List<Quizzes> GetByCategory(string category)
         {
-            return _quizzesContext.Quizzes.ToList().FindAll(q => q.Category == category);
+            return _quizzesContext.Quizzes.Where(q => q.Category == category).ToList();
         }
 
         public List<Quizzes> GetByType(string type)

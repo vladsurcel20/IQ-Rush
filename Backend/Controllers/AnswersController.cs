@@ -4,7 +4,7 @@ using QuizApp.Services;
 namespace QuizApp.Controllers
 {
     [ApiController]
-    [Route("answers")]
+    [Route("api/answers")]
     public class AnswersController : ControllerBase
     {
         private readonly AnswersService _answersService;
@@ -24,6 +24,9 @@ namespace QuizApp.Controllers
         [HttpGet("getByQuiz/{quizId}")]
         public IActionResult GetByQuizId(int quizId)
         {
+            if (!_answersService.isQuizIdValid(quizId)) {
+                return BadRequest("No quiz found");
+            }
             return Ok(_answersService.GetByQuizId(quizId));
         }
 

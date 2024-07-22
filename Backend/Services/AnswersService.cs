@@ -36,6 +36,12 @@ namespace QuizApp.Services
             else return true;
         }
 
+        public bool isQuizIdValid(int id)
+        {
+            if (_answersContext.Answers.FirstOrDefault(a => a.QuizId == id) == null) return false;
+            else return true;
+        }
+
         public Answers Get(int id)
         {
             return _answersContext.Answers.ToList().FirstOrDefault(a => a.Id == id); 
