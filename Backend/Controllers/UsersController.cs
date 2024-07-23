@@ -1,6 +1,8 @@
 ﻿using QuizApp.Services;
 using QuizApp.Models;
 using Microsoft.AspNetCore.Mvc;
+using Azure.Identity;
+using Microsoft.AspNetCore.Identity.Data;
 namespace QuizApp.Controllers
 {
 
@@ -35,8 +37,17 @@ namespace QuizApp.Controllers
             return Ok(_usersService.GetById(id));
         }
 
-        [HttpPost]
-        public IActionResult Post(Users user)
+        [HttpGet("username/{username}")]
+        public IActionResult GetByUsername(string username)
+        {
+            if (_usersService.GetByUsername(username) == null) {
+                return BadRequest("Incorrect username");
+            }
+            else return Ok(_usersService.GetByUsername(username));
+        }
+
+        [HttpPost("signup")]
+        public IActionResult Post([FromBody ] Users user)
         {
             if (!_usersService.IsUsernameUnique(user.Username))
             {
@@ -48,6 +59,28 @@ namespace QuizApp.Controllers
             }
             _usersService.Add(user);
             return Ok();
+        }
+
+        [HttpPost("login")]
+        public IActionResult Login([FromBody] LoginRequest loginRequest)
+        {
+            var user = _usersService.Authenticate(loginRequest.Username, loginRequest.Password);
+
+            if (user == null)
+            {
+                return Unauthorized("Invalid username or password");
+            }
+
+            // Generate a token (in a real application)
+            var token = "dummy-token"; // Replace with actual token generation logic
+
+            return Ok(new { Token = token });
+        }
+
+        public class LoginRequest
+        {
+            public string Username { get; set; }
+            public string Password { get; set; }
         }
 
         [HttpDelete]

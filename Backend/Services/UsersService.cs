@@ -1,5 +1,7 @@
-﻿using QuizApp.Models;
+﻿using BCrypt.Net;
+using QuizApp.Models;
 using QuizApp.Data;
+using Microsoft.EntityFrameworkCore;
 namespace QuizApp.Services
 {
     public class UsersService
@@ -33,6 +35,11 @@ namespace QuizApp.Services
             return _usersContext.Users.ToList().FirstOrDefault(user => user.Id == id);
         }
 
+        public Users GetByUsername(string usernname)
+        {
+            return _usersContext.Users.FirstOrDefault(user => user.Username == usernname);
+        }
+
         public List<Users> FindByName(string username)
         {
             return _usersContext.Users.ToList().FindAll(u => u.Username == username);      
@@ -40,8 +47,21 @@ namespace QuizApp.Services
 
         public void Add(Users user)
         {
+            user.Password = BCrypt.Net.BCrypt.HashPassword(user.Password);
             _usersContext.Add(user);
             _usersContext.SaveChanges();
+        }
+
+        public Users Authenticate(string username, string password)
+        {
+            var user = _usersContext.Users.SingleOrDefault(u => u.Username == username);
+
+            if (user != null && BCrypt.Net.BCrypt.Verify(password, user.Password))
+            {
+                return user;
+            }
+
+            return null;
         }
 
         public void Remove(int id)
