@@ -1,4 +1,9 @@
 ﻿using BCrypt.Net;
+using System;
+using System.IdentityModel.Tokens.Jwt;
+using System.Security.Claims;
+using System.Text;
+using Microsoft.IdentityModel.Tokens;
 using QuizApp.Models;
 using QuizApp.Data;
 using Microsoft.EntityFrameworkCore;
@@ -13,6 +18,31 @@ namespace QuizApp.Services
             _usersContext = context;
         }
 
+
+
+        public string GenerateJwtToken(Users user)
+        {
+            var securityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes("scooby-doo-where-are-you-secure-key"));
+            var credentials = new SigningCredentials(securityKey, SecurityAlgorithms.HmacSha256);
+
+            var claims = new[]
+            {
+                new Claim(JwtRegisteredClaimNames.Sub, user.Username),
+                new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString())
+            };
+
+            var token = new JwtSecurityToken(
+                issuer: "https://localhost:7139",
+                audience: "http://localhost:5173",
+                claims: claims,
+                expires: DateTime.Now.AddHours(1),
+                signingCredentials: credentials);
+
+            return new JwtSecurityTokenHandler().WriteToken(token);
+        }
+
+
+
         public bool IsIdUsed(int id)
         {
             if (_usersContext.Users.FirstOrDefault(u => u.Id == id) == null) return false;
@@ -25,6 +55,12 @@ namespace QuizApp.Services
             else return false;
         }
 
+        public bool duplicateUsername(string username)
+        {
+            if (_usersContext.Users.ToList().FindAll(u => u.Username == username).Count == 2) return true;
+            return false;
+        }
+
         public List<Users> GetAll()
         {
             return _usersContext.Users.ToList();
@@ -35,9 +71,9 @@ namespace QuizApp.Services
             return _usersContext.Users.ToList().FirstOrDefault(user => user.Id == id);
         }
 
-        public Users GetByUsername(string usernname)
+        public Users GetByUsername(string username)
         {
-            return _usersContext.Users.FirstOrDefault(user => user.Username == usernname);
+            return _usersContext.Users.FirstOrDefault(user => user.Username == username);
         }
 
         public List<Users> FindByName(string username)
@@ -71,14 +107,13 @@ namespace QuizApp.Services
             _usersContext.SaveChanges();
         }
 
-        public void Update(Users newUser)
+        public void Update(int id, Users newUser)
         {
-            Users user = _usersContext.Users.FirstOrDefault(u => u.Id == newUser.Id);
+            Users user = _usersContext.Users.FirstOrDefault(u => u.Id == id);
 
             _usersContext.Remove(user);
             _usersContext.Add(newUser);
             _usersContext.SaveChanges();
-
         }
     }
 }

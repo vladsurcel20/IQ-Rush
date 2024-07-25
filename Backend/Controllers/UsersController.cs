@@ -3,6 +3,9 @@ using QuizApp.Models;
 using Microsoft.AspNetCore.Mvc;
 using Azure.Identity;
 using Microsoft.AspNetCore.Identity.Data;
+using System.IdentityModel.Tokens.Jwt;
+using System.Security.Claims;
+using Microsoft.AspNetCore.Authorization;
 namespace QuizApp.Controllers
 {
 
@@ -37,14 +40,29 @@ namespace QuizApp.Controllers
             return Ok(_usersService.GetById(id));
         }
 
-        [HttpGet("username/{username}")]
-        public IActionResult GetByUsername(string username)
+/*        [Authorize]*/
+        [HttpGet("user-data")]
+        public IActionResult GetUserData()
         {
-            if (_usersService.GetByUsername(username) == null) {
-                return BadRequest("Incorrect username");
+            Console.WriteLine(JwtRegisteredClaimNames.Sub);
+            var username = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            Console.WriteLine(username);
+
+                if (username == null)
+            {
+                return Unauthorized("User is not authorized.");
             }
-            else return Ok(_usersService.GetByUsername(username));
+
+            var user = _usersService.GetByUsername(username);
+
+            if (user == null)
+            {
+                return NotFound();
+            }
+
+            return Ok(user);
         }
+
 
         [HttpPost("signup")]
         public IActionResult Post([FromBody ] Users user)
@@ -71,8 +89,17 @@ namespace QuizApp.Controllers
                 return Unauthorized("Invalid username or password");
             }
 
-            // Generate a token (in a real application)
-            var token = "dummy-token"; // Replace with actual token generation logic
+            var token = _usersService.GenerateJwtToken(user);
+
+        /*    var cookieOptions = new CookieOptions
+            {
+                HttpOnly = true,
+                Secure = true,
+                SameSite = SameSiteMode.Strict,
+                Expires = DateTime.Now.AddHours(1)
+            };
+
+            Response.Cookies.Append("jwt", token, cookieOptions);*/
 
             return Ok(new { Token = token });
         }
@@ -96,17 +123,18 @@ namespace QuizApp.Controllers
 
 
         [HttpPut]
-        public IActionResult Put(Users user)
+        public IActionResult Put(int id, Users user)
         {
-            if (_usersService.IsIdUsed(user.Id) == false)
+            if (_usersService.IsIdUsed(id) == false)
             {
-                return BadRequest("User not found");
+                return NotFound("User not found");
             }
-            if (!_usersService.IsUsernameUnique(user.Username))
+                
+            if(_usersService.duplicateUsername(user.Username) == true)
             {
                 return BadRequest("Username already used");
             }
-            _usersService.Update(user);
+            _usersService.Update(id, user);
             return Ok();
         }
     }

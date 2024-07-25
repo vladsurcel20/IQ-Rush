@@ -2,16 +2,17 @@ import React from 'react'
 import NavbarNotLogged from './Components/NavbarNotLogged'
 import NavbarLogged from './Components/NavbarLogged'
 import { useState } from 'react'
+import { useAuth } from './Context/AuthContext'
 
 
 
 const Header = () => {
 
-    const [logged, setLogged] = useState<boolean>(false);
+    const {isLogged} = useAuth()
 
   return (
     <div className='header'>
-        {logged ? ( <NavbarLogged />) : ( <NavbarNotLogged setLogged={setLogged}/> )}
+        {isLogged ? ( <NavbarLogged />) : ( <NavbarNotLogged/> )}
     </div>
   )
 }

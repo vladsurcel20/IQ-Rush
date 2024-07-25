@@ -1,3 +1,6 @@
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.IdentityModel.Tokens;
+using System.Text;
 using QuizApp.Data;
 using QuizApp.Services;
 namespace QuizzApp
@@ -7,6 +10,27 @@ namespace QuizzApp
         public static void Main(string[] args)
         {
             var builder = WebApplication.CreateBuilder(args);
+
+
+            builder.Services.AddAuthentication(options =>
+            {
+                options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+                options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+            }).AddJwtBearer(options =>
+            {
+                options.TokenValidationParameters = new TokenValidationParameters
+                {
+                    ValidateIssuer = true,
+                    ValidateAudience = true,
+                    ValidateLifetime = true,
+                    ValidateIssuerSigningKey = true,
+                    ValidIssuer = "https://localhost:7139",
+                    ValidAudience = "http://localhost:5173",
+                    IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes("scooby-doo-where-are-you-secure-key"))
+                };
+            });
+
+            builder.Services.AddAuthorization();
 
 
             builder.Services.AddCors(options =>
@@ -44,6 +68,7 @@ namespace QuizzApp
             app.UseHttpsRedirection();
             app.UseCors();
 
+            app.UseAuthentication();
             app.UseAuthorization();
 
 

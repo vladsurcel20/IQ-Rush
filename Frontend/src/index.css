@@ -63,8 +63,32 @@
   margin: 0 10px;
 }
 
+.navbar.notLogged form{
+  position:absolute;
+  top: 10vh;
+  right: 3vw;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  font-size: small;
+  border: 2px solid var(--white);
+  background-color: var(--blue);
+  padding: 15px;
+}
+
+.navbar.notLogged form > button{
+  border:none;
+  background-color: var(--yellow);
+  color:var(--white);
+  font-family: MyFont;
+  cursor: pointer;
+  width: 80%;
+  height: 30px;
+  margin-top: 5px;
+}
+
 .header img{
-  width: 75px;
+  width: 60px;
   cursor: pointer;
 }
 
@@ -98,7 +122,8 @@
   top: 50Vh;
 }
 
-.mainPage button.playBtn{
+
+.mainPage button.playBtnA{
   border: none;
   width: 100%;
   height: 50px;
@@ -111,9 +136,30 @@
   border-radius: 20px;
 }
 
-.mainPage .playBtn:hover{
+.mainPage button.playBtn{
+  border: none;
+  width: 100%;
+  max-width: 20%;
+  height: 50px;
+  position: relative;
+  top: 50Vh;
+  color: var(--white);
+  background-color: var(--yellow);
+  font-family: myFont;
+  font-size: x-large;
+  font-weight: 600;
+  cursor: pointer;
+  border-radius: 20px;
+}
+
+.mainPage .playBtn:hover, .playBtnA:hover{
   font-size: xx-large;
   transform: scale(1.05);
+}
+
+.mainPage .alertP{
+  position:relative;
+  top: 52vh;
 }
 
 
@@ -234,6 +280,7 @@
   background-color: var(--yellow);
 }
 
+/* PLAY PAGE -> PLAY MENU */
 
 
 .playPage .questionDiv {
@@ -266,6 +313,11 @@
   row-gap: 40px;
 }
 
+.answersDiv input{
+  font-family: MyFont;
+  height: 2em; 
+}
+
 .answersDiv span .answer { 
   width: 100%;
   height: 100%;
@@ -285,3 +337,34 @@
   transform: scale(1.1);
   box-shadow: 0 0 20px 1px var(--blue);
 }
+
+.playPage .timer {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  margin-top: 2%;
+  background-color: #FF490C ;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.playPage .pointsView{
+  margin: 10% 0 2%;
+  font-size:xx-large
+}
+
+.playPage .pointsView span{
+  color: #FF490C;
+}
+
+.playPage .backBtn{
+  width: 100px;
+  height: 50px;
+  font-family: MyFont;
+  color: var(--white);
+  background-color: #FF490C ;
+  font-size: large;
+  border: none;
+}
+
