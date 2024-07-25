@@ -40,13 +40,12 @@ namespace QuizApp.Controllers
             return Ok(_usersService.GetById(id));
         }
 
-/*        [Authorize]*/
+        [Authorize]
         [HttpGet("user-data")]
         public IActionResult GetUserData()
         {
             Console.WriteLine(JwtRegisteredClaimNames.Sub);
             var username = User.FindFirstValue(ClaimTypes.NameIdentifier);
-            Console.WriteLine(username);
 
                 if (username == null)
             {
@@ -122,8 +121,8 @@ namespace QuizApp.Controllers
         }
 
 
-        [HttpPut]
-        public IActionResult Put(int id, Users user)
+        [HttpPut("{id}")]
+        public IActionResult Put(int id, [FromBody] Users user)
         {
             if (_usersService.IsIdUsed(id) == false)
             {

@@ -14,7 +14,7 @@ export interface Quiz {
 const PlayPage = () => {
     const navigate = useNavigate();
 
-    const [quizzesNr, setQuizzesNr] = useState<number | null>(null)
+    const [quizzesNr, setQuizzesNr] = useState<number>(0)
     const [gameQuizzes, setGameQuizzes] = useState<Quiz[]>([])
     const [startBtnClick, setStartBtnClick] = useState<boolean>(false);
 

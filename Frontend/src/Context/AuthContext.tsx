@@ -25,21 +25,21 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
 
   
     useEffect(() => {
-      const token = sessionStorage.getItem('jwt');
+      const token = localStorage.getItem('jwt');
       if (token) {
         setIsLogged(true);
       }
     }, []);
   
     const login = (token: string) => {
-      sessionStorage.setItem('jwt', token);
+      localStorage.setItem('jwt', token);
       setIsLogged(true);
     };
   
     const logout = () => {
-      sessionStorage.removeItem('jwt');
+      localStorage.removeItem('jwt');
       setIsLogged(false);
-      sessionStorage.removeItem('user')
+      localStorage.removeItem('user')
     };
   
   

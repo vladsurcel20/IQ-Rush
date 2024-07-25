@@ -4,11 +4,13 @@ import { Quiz } from '../PlayPage';
 import api from '../api/answers'
 import { AxiosResponse, AxiosError} from 'axios';
 import { useNavigate } from 'react-router-dom';
+import userApi from '../api/users'
+import { User } from '../Context/AuthContext';
 
 
 interface Props {
     setStartBtnClick: React.Dispatch<React.SetStateAction<boolean>>
-    gameQuizzes: Quiz[];
+    gameQuizzes: Quiz[]
 }
 
 interface Answer { 
@@ -18,23 +20,23 @@ interface Answer {
     isCorrect: boolean;
 }
 
+
 const PlayMenu = ({setStartBtnClick, gameQuizzes}: Props) => {
 
     const [answers, setAnswers] = useState<Answer[]>([]);
     let [currentIndex, setCurrentIndex] = useState<number>(0)
     let [currentAnswers, setCurrentAnswers] = useState<Answer[]>([])
     let [answerInput, setAnswerInput] = useState<string>('')
-    const[isGameFinished, setIsGameFinished] = useState<boolean>(true)
-    let [timer, setTimer] = useState<number>(5)
+    const[isGameFinished, setIsGameFinished] = useState<boolean>(false)
+    let [timer, setTimer] = useState<number>(7)
     const [selectedAnswer, setSelectedAnswer] = useState<Answer | undefined>(undefined)
     const [gamePoints, setGamePoints] = useState<number>(0)
 
-    const quizzesNr:number = 3;
-    const timeToAnswer:number = 5000;
+    const timeToAnswer:number = 7000;
 
     const timerInterval = setInterval(() => {
         if(timer-1 > 0) setTimer(timer-1)
-        else setTimer(5)
+        else setTimer(7)
     }, 1000)
 
 
@@ -42,6 +44,10 @@ const PlayMenu = ({setStartBtnClick, gameQuizzes}: Props) => {
         if(selectedAnswer?.isCorrect == true) setGamePoints(gamePoints+1)
         setSelectedAnswer(undefined)
     }
+
+    // useEffect(() => {
+    //     pointsLogic()
+    // }, [selectedAnswer])
     
     useEffect(() => {
         
@@ -64,9 +70,7 @@ const PlayMenu = ({setStartBtnClick, gameQuizzes}: Props) => {
         if (gameQuizzes[currentIndex]) {
             setCurrentAnswers(answers.filter((a) => gameQuizzes[currentIndex].id == a.quizId));
         }
-        pointsLogic();
-        // setTimer(5)
-        // timerInterval
+        pointsLogic()
       }, [currentIndex, answers]);
 
 
@@ -78,11 +82,11 @@ const PlayMenu = ({setStartBtnClick, gameQuizzes}: Props) => {
             setCurrentIndex((prevIndex) => 
                 prevIndex + 1 === gameQuizzes.length ? 0 : prevIndex + 1
             );
-            // setTimer(5);
-            // setTimer(5)
             if(x >=3) {
-                clearInterval(interval)
-                setIsGameFinished(true);
+                setTimeout(() => {
+                    clearInterval(interval)
+                    setIsGameFinished(true);
+                }, 200);
             }
         }, timeToAnswer);
     
@@ -90,14 +94,11 @@ const PlayMenu = ({setStartBtnClick, gameQuizzes}: Props) => {
 
 
 
-//   useEffect(() => {
-//     timerInterval
-//   }, []);
-
 
 
     const handleInputChange = (e:React.ChangeEvent<HTMLInputElement>) => {
         setAnswerInput(e.target.value)
+        if(currentAnswers[0].answer === answerInput) setGamePoints(gamePoints+1)
     }
 
     const handleAnswerClick = (e:React.MouseEvent<HTMLElement>) => {
@@ -112,28 +113,70 @@ const PlayMenu = ({setStartBtnClick, gameQuizzes}: Props) => {
         setSelectedAnswer(answer)
     }
 
+
+    useEffect(() => {
+        const userString = localStorage.getItem('user')
+        let user:User
+        const updateUser = async () => {
+            if(userString) {
+                user = JSON.parse(userString)
+            } else {throw Error("User isn't logged")}
+            const findId = user.id
+            let updatedUser = {...user, points: user.points+gamePoints, quizzesDone: user.quizzesDone+gameQuizzes.length}
+            // const {id, ...newUser} = updatedUser;
+            console.log(updateUser);
+            console.log(findId);
+            
+            
+            try{
+                const res:AxiosResponse = await userApi.put(`/${findId}`, 
+                    updatedUser,
+                    { headers: { 'Content-Type': 'application/json' }} 
+            )
+            } catch(err){
+                console.error("Failed to fetch user data", err);
+                const error = err as AxiosError
+                console.log(error.response?.data);   
+            }
+        }
+
+        updateUser()
+
+    }, [isGameFinished])
+
     
 
   return (
-    <>
-        <div>{timer}</div>
-        <div className='questionDiv'>
-            <p>{gameQuizzes[currentIndex].question}</p>
-        </div>
+    <> 
+    {!isGameFinished ? (
+        <>
+            <div className='timer'>
+                <p>{timer}</p>
+            </div>
+            <div className='questionDiv'>
+                <p>{gameQuizzes[currentIndex].question}</p>
+            </div>
 
-        <div className='answersDiv'>
-            {gameQuizzes[currentIndex].type !== 'input' ? (
-                <span>
-                    {currentAnswers.map((a) => (
-                        <button type='button' className='answer' data-id={a.id} onClick={handleAnswerClick}>{a.answer}</button>
-                    ))} 
-                </span>
-            ) : (
-                <input value={answerInput} onChange={handleInputChange}></input>
-            )
-            }
-        </div>
-    </>
+            <div className='answersDiv'>
+                {gameQuizzes[currentIndex].type !== 'input' ? (
+                    <span>
+                        {currentAnswers.map((a) => (
+                            <button type='button' className='answer' data-id={a.id} key={a.id} onClick={handleAnswerClick}>{a.answer}</button>
+                        ))} 
+                    </span>
+                ) : (
+                    <input value={answerInput} onChange={handleInputChange}></input>
+                )
+                }
+            </div>
+        </>
+    ) : (
+        <>
+            <p className='pointsView'>Your points:{<span>{gamePoints}</span>}</p>
+            <button className='backBtn' onClick={() => setStartBtnClick(false)}>Go back</button>
+        </>
+    )}
+    </>      
   )
 }
 

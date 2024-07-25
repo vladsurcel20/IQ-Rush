@@ -11,19 +11,20 @@ interface Props {
 const StartMenu = ({setStartBtnClick, setGameQuizzes}: Props) => {
 
     const navigate = useNavigate();
-    const [quizzesNr, setQuizzesNr] = useState<number | undefined>(undefined)
+    const [quizzesNr, setQuizzesNr] = useState<number>(0)
 
     const handleNrBtnClick = (e:React.MouseEvent<HTMLButtonElement>) => {
-        setQuizzesNr(parseInt(e.currentTarget.textContent || '0', 10))
+        setQuizzesNr(parseInt(e.currentTarget.textContent || '0', 0))
     }
 
     const quizzes: Quiz[] = JSON.parse(sessionStorage.getItem('quizzes') || '[]');
 
     const handleStartClick = () => {
-        const shuffledQuizzes: Quiz[] = quizzes.sort(() => 0.5 - Math.random())
-
-        setStartBtnClick(true);
-        setGameQuizzes(shuffledQuizzes.slice(0, quizzesNr));
+        if(quizzesNr > 0){
+            const shuffledQuizzes: Quiz[] = quizzes.sort(() => 0.5 - Math.random())
+            setStartBtnClick(true);
+            setGameQuizzes(shuffledQuizzes.slice(0, quizzesNr));
+        }
     }
 
   return (

@@ -92,7 +92,7 @@
   cursor: pointer;
 }
 
-.navbar.Logged {
+.navbar.Logged, .navbar.notLogged{
   display: flex;
   flex-direction: row;
   justify-content: space-between;
