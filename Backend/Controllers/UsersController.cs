@@ -40,7 +40,7 @@ namespace QuizApp.Controllers
             return Ok(_usersService.GetById(id));
         }
 
-        [Authorize]
+       /* [Authorize]*/
         [HttpGet("user-data")]
         public IActionResult GetUserData()
         {

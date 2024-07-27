@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import { Link } from 'react-router-dom'
+import { Link, useLocation, useNavigate} from 'react-router-dom'
 import { useAuth } from '../Context/AuthContext'
 import api from '../api/users'
 import { AxiosError, AxiosResponse } from 'axios'
@@ -13,9 +13,15 @@ const Navbar = () => {
   const [username, setUsername] = useState<string>('')
   const [password, setPassword] = useState<string>('')
   const [retypedPassword, setRetypedPassword] = useState<string>('')
+  const [showHome, setShowHome] = useState<boolean>(false)
+  const [isUsernameClicked, setIsUsernameClicked] = useState<boolean>(false)
+  const [previousLocation, setPreviousLocation] =useState<string | null>(null)
   const {login, logout, isLogged} = useAuth()
+  const location = useLocation()
+  const navigate = useNavigate()
 
   const [user, setUser] = useState<User | null>(null);
+  
 
   useEffect(() => {
     setUsername('')
@@ -23,6 +29,11 @@ const Navbar = () => {
     setRetypedPassword('')
   }, [logInClick, signUpClick])
 
+  useEffect(() => {
+    if(location.pathname !== '/dashboard') setPreviousLocation(location.pathname)
+    if(location.pathname !== '/') setShowHome(true)
+    else setShowHome(false)
+  },[location])
 
   useEffect(() => {
 
@@ -48,7 +59,10 @@ const Navbar = () => {
       }catch(err){
         console.error("Failed to fetch user data", err);
         const error = err as AxiosError
+        if(error.response?.data == 'User is not authorized.'){
         console.log(error.response?.data);
+        logout()
+        }
       }
     }
 
@@ -114,16 +128,27 @@ const Navbar = () => {
           console.log(`Error: ${error.message}`);        
         }
       }
+    }
+
+    fetchApi()
   }
 
-  fetchApi()
-}
+  const handleUsernameClick = () => {
+    setIsUsernameClicked(!isUsernameClicked)
+  }
+
+  useEffect(() =>{
+    if(isUsernameClicked) navigate('/dashboard')
+    else if(previousLocation != null ) navigate(`${previousLocation}`)
+  },[isUsernameClicked])
 
   return (
     <>
       {!isLogged ? (
-        <nav className='navbar notLogged'>
-          <Link to='/'><img src='/whitehouse.png'/></Link>
+        <nav className={`navbar notLogged ${showHome ? 'show-home' : 'hide-home'}`}>
+          {showHome && (
+            <Link to='/'><img src='/whitehouse.png'/></Link>
+          )}
           <ul>
               <li onClick={() => {setLogInClick(!logInClick); setSignUpClick(false)}}>Log In</li>
               <li onClick={() => {setSignUpClick(!signUpClick); setLogInClick(false)}}>Sign Up</li>
@@ -154,11 +179,13 @@ const Navbar = () => {
           ) : (<></>)}
     </nav>
       ) : (
-        <nav className='navbar Logged'>
-          <Link to='/'><img src='/whitehouse.png'/></Link>
+        <nav className={`navbar Logged ${showHome ? 'show-home' : 'hide-home'}`}>
+           {showHome && (
+            <Link to='/'><img src='/whitehouse.png'/></Link>
+          )}
           <ul>
             {user ? (
-              <li>{user.username}</li>
+              <li onClick={handleUsernameClick}>{user.username}</li>
             ) : (
               <></>
             )}
@@ -166,36 +193,6 @@ const Navbar = () => {
           </ul>
         </nav>
       )}
-      {/* <nav className='navbar notLogged'>
-          <ul>
-              <li onClick={() => {setLogInClick(!logInClick); setSignUpClick(false)}}>Log In</li>
-              <li onClick={() => {setSignUpClick(!signUpClick); setLogInClick(false)}}>Sign Up</li>
-          </ul>
-          {logInClick ? (
-            <form onSubmit={handleSubmitLogin}>
-              <label htmlFor='username'>Username</label>
-              <input id='username' type='text' required onChange={(e) => setUsername(e.target.value.trim())}></input>
-
-              <label htmlFor='password'>Password</label>
-              <input id='password' type='password' required onChange={(e) => setPassword(e.target.value.trim())}></input>
-
-              <button type='submit'>Log In</button>
-            </form>
-          ) : signUpClick ? (
-            <form onSubmit={handleSubmitSignup}>
-              <label htmlFor='username'>Username</label>
-              <input id='username' type='text' required minLength={6} onChange={(e) => setUsername(e.target.value.trim())}></input>
-
-              <label htmlFor='password'>Password</label>
-              <input id='password' type='password' required minLength={10} onChange={(e) => setPassword(e.target.value.trim())}></input>
-
-              <label htmlFor='password'>Retype Password</label>
-              <input id='retypedPassword' type='password' required minLength={10} onChange={(e) => setRetypedPassword(e.target.value.trim())}></input>
-
-              <button type='submit'>Sign Up</button>
-            </form>
-          ) : (<></>)}
-      </nav> */}
     </>
   )
 }

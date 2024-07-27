@@ -1,12 +1,11 @@
 import {Routes, Route} from "react-router-dom"
-import { createContext } from "react"
-import { useState } from "react"
 import LandingPage from "./LandingPage"
 import Header from "./Header"
 import QuizPage from './QuizPage'
 import PlayPage from "./PlayPage"
-import { AuthContext } from "./Context/AuthContext"
+import Dashboard from "./Dashboard"
 import { AuthProvider } from "./Context/AuthContext"
+import ProtectedRoute from "./Components/ProtectedRoute"
 
 
 function App() {
@@ -17,8 +16,18 @@ function App() {
       <Header />
       <Routes>
         <Route path="/" element={<LandingPage />} />
-        <Route path="/quizzes" element={<QuizPage />} />
-        <Route path="/quizzes/play" element={<PlayPage />} />
+        <Route path="/quizzes" element={
+          <ProtectedRoute>
+            <QuizPage />
+          </ProtectedRoute>} />
+        <Route path="/quizzes/play" element={
+          <ProtectedRoute>
+          <PlayPage />
+        </ProtectedRoute>} />
+        <Route path="/dashboard" element={
+          <ProtectedRoute>
+          <Dashboard />
+        </ProtectedRoute>} />
         <Route path="*" element={<LandingPage />} />
       </Routes>
     </AuthProvider>
