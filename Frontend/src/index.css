@@ -22,6 +22,7 @@
   --yellow: #FFE32F;
   --white: rgba(255, 255, 255, 0.87);
   --blue: #446EFB;
+  --red: #FF490C;
 } 
 
 
@@ -92,10 +93,18 @@
   cursor: pointer;
 }
 
-.navbar.Logged, .navbar.notLogged{
+.navbar.Logged.show-home, .navbar.notLogged.show-home{
   display: flex;
   flex-direction: row;
   justify-content: space-between;
+  align-items: center;
+  padding: 0 2%;
+}
+
+.navbar.Logged.hide-home, .navbar.notLogged.hide-home{
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-end;
   align-items: center;
   padding: 0 2%;
 }
@@ -115,17 +124,28 @@
   font-family: myFont;
 }
 
+.mainPage .intro{
+  font-size: 1.7em;
+  margin: 7% 0  30px 0;
+}
+
+.mainPage .below-intro{
+  font-size: 1.1em;
+}
+
+
 .mainPage a.playBtn{
   width: 20%;
+  min-width: fit-content;
   height: 50px;
-  position: relative;
-  top: 50Vh;
+  margin-top: 180px
 }
 
 
 .mainPage button.playBtnA{
   border: none;
   width: 100%;
+  padding: 0 15px;
   height: 50px;
   color: var(--white);
   background-color: var(--yellow);
@@ -139,7 +159,9 @@
 .mainPage button.playBtn{
   border: none;
   width: 100%;
-  max-width: 20%;
+  /* max-width: 20%; */
+  padding: 0 15px;
+  min-width: fit-content;
   height: 50px;
   position: relative;
   top: 50Vh;
@@ -186,6 +208,7 @@
   width: 80%; 
   display: flex;
   flex-direction: row;
+  justify-content: center;
 }
 
 .categoryCard { 
@@ -368,3 +391,53 @@
   border: none;
 }
 
+
+
+/*  DASHBOARD   */
+
+.dashboardPage{
+  max-width: 100%;
+  width: 100%;
+  /* height: 100%; */
+  padding-top: 15vh;
+  /* font-family: myFont; */
+  font-size: large;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-evenly;
+  align-items: center;
+}
+
+.dashboardPage .userInfo p{
+  margin-bottom: 10px;
+  font-size: larger;
+}
+
+.userInfo span{
+  font-weight: bold;
+  color: var(--yellow);
+  font-family: MyFont;
+}
+
+.dashboardPage .leaderboard{
+  max-height: 60vh;
+  max-width: 60vw;
+  overflow-y: scroll;
+}
+
+.dashboardPage .users-table{
+  width: 100%;
+}
+
+.users-table th{
+  padding: 10px;
+  text-align: center;
+  font-family: MyFont;
+  color: var(--yellow);
+  cursor: pointer;
+}
+
+.users-table td{
+  text-align: center;
+  padding: 3px;
+}
