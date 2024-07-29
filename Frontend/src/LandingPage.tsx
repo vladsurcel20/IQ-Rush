@@ -1,6 +1,7 @@
 import { Link } from 'react-router-dom'
 import { useState } from 'react'
 import { useAuth } from './Context/AuthContext'
+import { useNavigate } from 'react-router-dom'
 
 
 
@@ -8,9 +9,11 @@ const LandingPage = () => {
 
   const {isLogged} = useAuth()
   const [attemptClick, setAttempClick] = useState<boolean>(false)
+  const navigate = useNavigate()
 
   const verifyClick = () => {
     if(!isLogged) setAttempClick(true)
+    else navigate('/quizzes')
   }
 
   return(
@@ -20,7 +23,7 @@ const LandingPage = () => {
       <p className='below-intro'> Beat the clock, and see who reigns supreme!</p>
 
       {isLogged ? (
-        <Link to='/quizzes' className='playBtn'><button className='playBtnA' type='button'>Ready, Set, Quiz!</button></Link>
+        <button className='playBtn' type='button' onClick={verifyClick}>Ready, Set, Quiz!</button>
       ) : !attemptClick ? ( 
         <button className='playBtn' type='button' onClick={verifyClick}>Ready, Set, Quiz!</button>
       ) : (
