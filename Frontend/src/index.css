@@ -133,12 +133,32 @@
   font-size: 1.1em;
 }
 
+.mainPage span{
+  margin-top: 50px;
+  width: 30%;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-evenly;
+  align-items: center;
+}
+
+.mainPage button.gameMode{
+  width: 120px;
+  min-width: fit-content;
+  height: 50px;
+  border: none;
+  font-family: Myfont;
+  color:var(--white);
+  background-color: var(--red);
+  font-size: 1.05em;
+}
+
 
 .mainPage a.playBtn{
   width: 20%;
   min-width: fit-content;
   height: 50px;
-  margin-top: 180px
+  margin-top: 100px
 }
 
 
@@ -162,7 +182,7 @@
   padding: 0 15px;
   min-width: fit-content;
   height: 50px;
-  margin-top: 180px;
+  margin-top: 100px;
   color: var(--white);
   background-color: var(--yellow);
   font-family: myFont;
@@ -178,8 +198,11 @@
 }
 
 .mainPage .alertP{
-  position:relative;
-  top: 52vh;
+  margin-top: 2vh;
+}
+
+.mainPage span button{
+  cursor: pointer;
 }
 
 
@@ -439,3 +462,109 @@
   text-align: center;
   padding: 3px;
 }
+
+
+
+/*   ONLINE GAME PAGE   */
+
+.onlineGamePage{
+  max-width: 100%;
+  width: 100%;
+  height: 100%;
+  padding: 10% 10% 0 5%;
+  font-family: MyFont;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: flex-start;
+}
+
+.onlineGamePage .createRoom{
+  width: 30%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 2em;
+}
+
+.createRoom form{
+  width:100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.createRoom form input{
+  height: 25px;
+  outline: var(--white);
+}
+
+.createRoom form span{
+  margin: 10px 0 20px 0;
+}
+
+.createRoom select{
+  margin: 0 10px;
+  font-family: MyFont;
+  height: 25px;
+  outline: var(--white);
+  cursor: pointer;
+}
+
+.createRoom button{
+  width: 40%;
+  height: 40px;
+  margin-top: 50px;
+  border: none;
+  background-color: var(--yellow);
+  color: var(--white);
+  font-family: MyFont;
+  cursor: pointer;
+}
+
+
+.onlineGamePage .availableRooms{
+  width: 50%;
+  min-width: fit-content;
+  max-width: 60%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  height: 60vh;
+  overflow-y: auto;
+  margin-top: -40px;
+}
+
+.availableRooms div{
+  font-size: x-large;
+  align-items: center;
+  margin-bottom: 40px;
+}
+
+.availableRooms .warning{
+  margin-top: 80px;
+  font-size: larger;
+}
+
+.availableRooms .roomContainer{ 
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  width: 30%;
+  height: 30px;
+  font-size: large;
+  margin: 10px 0;
+
+}
+
+.roomContainer button{
+  border: none;
+  font-family: MyFont;
+  height: 80%;
+  width: 30%;
+  color: var(--white);
+  background-color: var(--yellow);
+  cursor: pointer;
+}
+

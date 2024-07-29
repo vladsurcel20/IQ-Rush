@@ -2,7 +2,6 @@ import { useEffect, useState} from "react"
 import api from './api/users'
 import { AxiosResponse } from "axios"
 import { User } from "./Context/AuthContext"
-import quizzes from "./api/quizzes"
 
 interface usersData{
     id: number,

@@ -1,25 +1,21 @@
 import React from 'react'
 import { useState, useEffect} from 'react';
 import { Quiz } from '../PlayPage';
+import quizHubService from '../Services/quizHubService';
+import { Room } from '../Services/quizHubService';
 import api from '../api/answers'
 import { AxiosResponse, AxiosError} from 'axios';
 import userApi from '../api/users'
 import { User } from '../Context/AuthContext';
 
-interface Props {
-    setStartBtnClick: React.Dispatch<React.SetStateAction<boolean>>
-    gameQuizzes: Quiz[]
-}
-
-export interface Answer { 
+interface Answer { 
     id:number; 
     quizId: number;
     answer: string;
     isCorrect: boolean;
 }
 
-
-const PlayMenu = ({setStartBtnClick, gameQuizzes}: Props) => {
+const OnlinePlayMenu: React.FC<{ room: Room }> = ({ room }) => {
 
     const [answers, setAnswers] = useState<Answer[]>([]);
     let [currentIndex, setCurrentIndex] = useState<number>(0)
@@ -29,35 +25,50 @@ const PlayMenu = ({setStartBtnClick, gameQuizzes}: Props) => {
     let [timer, setTimer] = useState<number>(7)
     const [selectedAnswer, setSelectedAnswer] = useState<Answer | undefined>(undefined)
     const [gamePoints, setGamePoints] = useState<number>(0)
+    const [gameQuizzes, setGameQuizzes] = useState<Quiz[]>(room.quizzes);
 
     const pointsLogic = () => {
         if(selectedAnswer?.isCorrect == true) setGamePoints(gamePoints+1)
         setSelectedAnswer(undefined)
     }
 
-
     useEffect(() => {
-        const fetchAnswers = async () => {
-            const answersSet = new Set<Answer>();
+        quizHubService.start();
 
-            for (const q of gameQuizzes) {
-                try {
-                    const res: AxiosResponse<Answer[]> = await api.get(`/getByQuiz/${q.id}`);
-                    res.data.forEach(answer => answersSet.add(answer));
-                } catch (err) {
-                    const error = err as AxiosError;
-                    if (error.response?.data) {
-                        alert(error.response.data);
-                    } else {
-                        console.log(`Error: ${error.message}`);
-                    }
-                }
-            }
-            setAnswers(Array.from(answersSet));
-        }
+        quizHubService.onGameStarted = (room: Room) => {
+            setGameQuizzes(room.quizzes);
+            setAnswers(Object.values(room.answers).flat());
+            setIsGameFinished(false);
+        };
 
-        fetchAnswers()
-    },[])
+        return () => {
+            quizHubService.connection.stop();
+        };
+    }, [room.name]);
+
+
+    // useEffect(() => {
+    //     const fetchAnswers = async () => {
+    //         const answersSet = new Set<Answer>();
+
+    //         for (const q of gameQuizzes) {
+    //             try {
+    //                 const res: AxiosResponse<Answer[]> = await api.get(`/getByQuiz/${q.id}`);
+    //                 res.data.forEach(answer => answersSet.add(answer));
+    //             } catch (err) {
+    //                 const error = err as AxiosError;
+    //                 if (error.response?.data) {
+    //                     alert(error.response.data);
+    //                 } else {
+    //                     console.log(`Error: ${error.message}`);
+    //                 }
+    //             }
+    //         }
+    //         setAnswers(Array.from(answersSet));
+    //     }
+
+    //     fetchAnswers()
+    // },[])
 
 
     useEffect(() => {
@@ -168,11 +179,11 @@ const PlayMenu = ({setStartBtnClick, gameQuizzes}: Props) => {
     ) : (
         <>
             <p className='pointsView'>Your points:{<span>{gamePoints}</span>}</p>
-            <button className='backBtn' onClick={() => setStartBtnClick(false)}>Go back</button>
+            <button className='backBtn' onClick={() => setIsGameFinished(true)}>Go back</button>
         </>
     )}
     </>      
   )
 }
 
-export default PlayMenu
+export default OnlinePlayMenu

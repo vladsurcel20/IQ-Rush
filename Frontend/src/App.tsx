@@ -6,6 +6,7 @@ import PlayPage from "./PlayPage"
 import Dashboard from "./Dashboard"
 import { AuthProvider } from "./Context/AuthContext"
 import ProtectedRoute from "./Components/ProtectedRoute"
+import OnlineGamePage from "./OnlineGamePage"
 
 
 function App() {
@@ -27,6 +28,10 @@ function App() {
         <Route path="/dashboard" element={
           <ProtectedRoute>
           <Dashboard />
+        </ProtectedRoute>} />
+        <Route path="/online-game" element={
+          <ProtectedRoute>
+          <OnlineGamePage />
         </ProtectedRoute>} />
         <Route path="*" element={<LandingPage />} />
       </Routes>

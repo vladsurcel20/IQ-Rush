@@ -3,6 +3,7 @@ using Microsoft.IdentityModel.Tokens;
 using System.Text;
 using QuizApp.Data;
 using QuizApp.Services;
+using QuizApp.Hubs;
 namespace QuizzApp
 {
     public class Program
@@ -40,9 +41,13 @@ namespace QuizzApp
                     {
                         policy.WithOrigins("http://localhost:5173")
                               .WithMethods("GET", "POST", "PUT", "DELETE")
-                              .AllowAnyHeader();
+                              .AllowAnyHeader()
+                              .AllowCredentials();
                     });
             });
+
+            /*            builder.WebHost.UseUrls("http://0.0.0.0:5086", "https://0.0.0.0:7140", "http://localhost:5085", "https://localhost:7139");*/
+
 
             // Add services to the container.
 
@@ -56,6 +61,7 @@ namespace QuizzApp
             builder.Services.AddScoped<QuizzesService>();
             builder.Services.AddDbContext<AnswersContext>();
             builder.Services.AddScoped<AnswersService>();
+            builder.Services.AddSignalR();
             var app = builder.Build();
 
             // Configure the HTTP request pipeline.
@@ -73,6 +79,7 @@ namespace QuizzApp
 
 
             app.MapControllers();
+            app.MapHub<QuizHub>("/quizHub");
 
             app.Run();
         }
