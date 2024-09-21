@@ -6,6 +6,7 @@ import PlayPage from "./PlayPage"
 import Dashboard from "./Dashboard"
 import { AuthProvider } from "./Context/AuthContext"
 import ProtectedRoute from "./Components/ProtectedRoute"
+import AccessPage from "./AccessPage"
 
 
 function App() {
@@ -13,9 +14,9 @@ function App() {
   return (
     <>
     <AuthProvider > 
-      <Header />
       <Routes>
         <Route path="/" element={<LandingPage />} />
+        <Route path="/access" element={<AccessPage/>} /> 
         <Route path="/quizzes" element={
           <ProtectedRoute>
             <QuizPage />

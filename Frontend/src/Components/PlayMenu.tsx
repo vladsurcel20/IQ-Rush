@@ -37,6 +37,8 @@ const PlayMenu = ({setStartBtnClick, gameQuizzes}: Props) => {
         setSelectedAnswer(undefined)
     }
 
+    const imgSource = `/${gameQuizzes[0].category}.png`;
+
 
     useEffect(() => {
         const fetchAnswers = async () => {
@@ -144,14 +146,19 @@ const PlayMenu = ({setStartBtnClick, gameQuizzes}: Props) => {
     
 
   return (
-    <> 
+    <div className='play-menu'> 
     {!isGameFinished ? (
         <>
             <div className='timer'>
                 <p>{timer}</p>
             </div>
+            <div className='img-wrapper'>
+                <img className="category-photo" src={imgSource} alt='category photo'/>
+            </div>
             <div className='questionDiv'>
-                <p>{gameQuizzes[currentIndex].question}</p>
+                <p className='question-counter'>question {currentIndex+1} of 
+                    {gameQuizzes.length}</p>
+                <p className='question'>{gameQuizzes[currentIndex].question}</p>
             </div>
 
             <div className='answersDiv'>
@@ -173,7 +180,7 @@ const PlayMenu = ({setStartBtnClick, gameQuizzes}: Props) => {
             <button className='backBtn' onClick={() => setStartBtnClick(false)}>Go back</button>
         </>
     )}
-    </>      
+    </div>      
   )
 }
 

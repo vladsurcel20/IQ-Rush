@@ -1,7 +1,11 @@
 import CategoryCard from "./Components/CategoryCard"
+import Header from "./Header"
 
 const QuizPage = () => {
   return (
+    <>
+    <Header /> 
+    
     <div className="quizPage">
         <p className="intro">Pick a category</p>
 
@@ -11,6 +15,7 @@ const QuizPage = () => {
             <CategoryCard category='Biology' />
         </div>
     </div>
+    </>
   )
 }
 

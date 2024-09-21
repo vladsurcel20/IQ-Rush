@@ -60,7 +60,9 @@ const CategoryCard = (props: Props) => {
     }
 
   return (
-    <div className='categoryCard' onClick={handleClick}>
+    <div className= {`category-card ${category}`} onClick={handleClick}>
+        <img  className="category-logo" src={`${category}.png`} alt="category photo" />
+        <div className="play-icon"><span className="fa-solid fa-play "></span></div>
         <p>{props.category}</p>
     </div>
   )

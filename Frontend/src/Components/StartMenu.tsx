@@ -2,6 +2,7 @@ import React from 'react'
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { Quiz } from '../PlayPage'
+import Header from '../Header'
 
 interface Props { 
     setStartBtnClick: React.Dispatch<React.SetStateAction<boolean>>
@@ -29,8 +30,9 @@ const StartMenu = ({setStartBtnClick, setGameQuizzes}: Props) => {
 
   return (
     <>
+        <Header />
         <span>
-                <img src='/left-arrow64.png' onClick={() => navigate('/quizzes')}></img>
+                <img className="left-arrow"src='/icons8-left-arrow-colored.png' onClick={() => navigate('/quizzes')}></img>
                 <p className="intro">Select the number of questions</p>
             </span>
 
